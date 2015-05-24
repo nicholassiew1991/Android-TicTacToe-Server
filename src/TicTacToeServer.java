@@ -3,6 +3,8 @@ import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,8 +14,11 @@ public class TicTacToeServer {
   
   ServerSocket TicTacToeServerSocket;
   
+  List ClientList = new ArrayList();
+  
   public TicTacToeServer() {
     new ListeningPort().start();
+    new PrintClientList().start();
   }
   
   private class ListeningPort extends Thread {
@@ -27,9 +32,39 @@ public class TicTacToeServer {
         
           Socket clientSocket = TicTacToeServerSocket.accept();
           System.out.println("Connection from: " + clientSocket.getInetAddress().getHostAddress() + ":" + clientSocket.getPort());
+          ClientList.add(clientSocket);
+          
+          if (ClientList.size() == 2) {
+            // Make sure 2 client are connecting.
+            // If not connecting, close the socket, and 'continue'.
+            
+            // If 2 are connecting, create a GameThread handing for the game.
+            /*Socket Player 1 = ((Socket) ClientList.get(0));
+            GameThread Games = new GameThread((Socket)ClientList.get(0), (Socket)ClientList.get(1));*/
+          }
         }
-      } catch (IOException ex) {
+      } 
+      catch (IOException ex) {
         Logger.getLogger(TicTacToeServer.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }
+    
+    private boolean isClientConnecting(Socket Client) {
+      return false;
+    }
+  }
+  
+  private class PrintClientList extends Thread {
+    
+    public void run() {
+      while (true) {
+        System.out.println(ClientList);
+        try {
+          Thread.sleep(1000);
+        } 
+        catch (InterruptedException ex) {
+          Logger.getLogger(TicTacToeServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
       }
     }
   }
