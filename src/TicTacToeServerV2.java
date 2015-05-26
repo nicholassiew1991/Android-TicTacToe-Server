@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TicTacToeServer {
+public class TicTacToeServerV2 {
   
   final int LISTENING_PORT = 6666;
   
@@ -16,7 +16,7 @@ public class TicTacToeServer {
   
   List ClientList = new ArrayList();
   
-  public TicTacToeServer() {
+  public TicTacToeServerV2() {
     new ListeningPort().start();
     new PrintClientList().start();
     new PairingPlayer().start();

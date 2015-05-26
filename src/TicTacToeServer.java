@@ -1,6 +1,4 @@
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -18,7 +16,7 @@ public class TicTacToeServer {
   
   public TicTacToeServer() {
     new ListeningPort().start();
-    new PrintClientList().start();
+    //new PrintClientList().start();
     new PairingPlayer().start();
   }
   
@@ -46,34 +44,28 @@ public class TicTacToeServer {
     
     public void run() {
       while (true) {
+        
+        try {
+          Thread.sleep(1000);
+        } 
+        catch (InterruptedException ex) {
+          Logger.getLogger(TicTacToeServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         if (ClientList.size() >= 2) {
           Socket Player1 = ((Socket)ClientList.get(0));
           Socket Player2 = ((Socket)ClientList.get(1));
           
-          if (isClientConnecting(Player1) == false || isClientConnecting(Player2) == false) {
-              System.out.println("One of the user disconnected.");
-              continue;
-          }
-          else {
-            GameThread Games = new GameThread(Player1, Player2);
-            Games.start();
+          if (isClientConnecting(Player1) == false) {
             ClientList.remove(0);
+          }
+          else if (isClientConnecting(Player2) == false) {
             ClientList.remove(1);
           }
-          
-          // Make sure 2 client are connecting.
-            // If not connecting, close the socket, and 'continue'.
-            
-            // If 2 are connecting, create a GameThread handing for the game.
-            //Socket Player1 = ((Socket)ClientList.get(0));
-            //Socket Player2 = ((Socket)ClientList.get(1));
-            //GameThread Games = new GameThread((Socket)ClientList.get(0), (Socket)ClientList.get(1));
-          
-          try {
-            Thread.sleep(1000);
-          } 
-          catch (InterruptedException ex) {
-            Logger.getLogger(TicTacToeServer.class.getName()).log(Level.SEVERE, null, ex);
+          else {
+            new GameThread(Player1, Player2).start();
+            ClientList.remove(1);
+            ClientList.remove(0);
           }
         }
       }
@@ -104,18 +96,5 @@ public class TicTacToeServer {
         }
       }
     }
-  }
-  
-  private void ReceiveBoardStatus(Socket ClientSocket) {
-    
-    /*ObjectInputStream in = new ObjectInputStream(ClientSocket.getInputStream());
-    char[][] bb = (char[][])in.readObject();
-        
-    for (int a = 0; a < 3; a++) {
-      for (int b = 0; b < 3; b++) {
-        System.out.print(bb[a][b] + " ");
-      }
-      System.out.println("");
-    }*/
   }
 }

@@ -4,11 +4,11 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
-public class GameThread extends Thread{
+public class GameThreadV2 extends Thread{
   
   Socket Player1, Player2;
   
-  public GameThread(Socket Player1, Socket Player2) {
+  public GameThreadV2(Socket Player1, Socket Player2) {
     this.Player1 = Player1;
     this.Player2 = Player2;
     System.out.println("GameThread Started!");
