@@ -63,7 +63,7 @@ public class TicTacToeServer {
             ClientList.remove(1);
           }
           else {
-            new GameThread(Player1, Player2).start();
+            new GameThread(Player1, Player2);
             ClientList.remove(1);
             ClientList.remove(0);
           }
