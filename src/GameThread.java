@@ -19,6 +19,7 @@ public class GameThread {
     System.out.println("GameThread Started!");
     new ReceiveMessages(this.Player1, this.Player2).start();
     new ReceiveMessages(this.Player2, this.Player1).start();
+    SendPlayerSymbol();
   }
   
   private void SendPlayerSymbol() { 
