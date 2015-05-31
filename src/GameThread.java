@@ -19,24 +19,6 @@ public class GameThread {
     System.out.println("GameThread Started!");
     new ReceiveMessages(this.Player1, this.Player2).start();
     new ReceiveMessages(this.Player2, this.Player1).start();
-    SendPlayerSymbol();
-  }
-  
-  private void SendPlayerSymbol() { 
-    try {
-      OutputStream ToPlayerOne = Player1.getOutputStream();
-      ObjectOutputStream OutToPlayer1 = new ObjectOutputStream(ToPlayerOne);
-      OutToPlayer1.writeByte(ServerGlobal.GET_PLAYER_SYMBOL);
-      OutToPlayer1.writeChar('O');
-      
-      OutputStream ToPlayerTwo = Player2.getOutputStream();
-      ObjectOutputStream OutToPlayer2 = new ObjectOutputStream(ToPlayerTwo);
-      OutToPlayer2.writeByte(ServerGlobal.GET_PLAYER_SYMBOL);
-      OutToPlayer1.writeChar('X');
-    }
-    catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   private void SendBoardStatus(Socket DestClient) {
@@ -70,10 +52,6 @@ public class GameThread {
           ObjectInputStream in = new ObjectInputStream(this.SourceClient.getInputStream());
 
           switch (in.readByte()) {
-            case ServerGlobal.CLIENT_CONNECTED:
-              System.out.println(in.readUTF());
-              break;
-              
             case ServerGlobal.BOARD_STATUS:
               GameBoard = (char[][]) in.readObject();
               SendBoardStatus(this.DestinationClient);
