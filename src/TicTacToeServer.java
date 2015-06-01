@@ -96,16 +96,13 @@ public class TicTacToeServer {
           Socket Player1 = ((Socket)WiatForPairingList.get(0));
           Socket Player2 = ((Socket)WiatForPairingList.get(1));
           
-          System.out.println("Before 1send symbol");
           SendPlayerSymbol(Player1, 'O');
-          System.out.println("After 1send symbol");
-          
-          System.out.println("Before 2send symbol");
           SendPlayerSymbol(Player2, 'X');
-          System.out.println("After 2send symbol");
           
           WiatForPairingList.remove(1);
           WiatForPairingList.remove(0);
+          
+          new GameThread(Player1, Player2);
           
           // Make sure their receive, then open gamethread
         }
@@ -124,6 +121,7 @@ public class TicTacToeServer {
       }
     }
   }  
+  
   private class PairingPlayer extends Thread {
     
     public void run() {

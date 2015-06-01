@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -17,8 +16,8 @@ public class GameThread {
     this.Player1 = Player1;
     this.Player2 = Player2;
     System.out.println("GameThread Started!");
-    new ReceiveMessages(this.Player1, this.Player2).start();
-    new ReceiveMessages(this.Player2, this.Player1).start();
+    new ReceiveMessagesThread(this.Player1, this.Player2).start();
+    new ReceiveMessagesThread(this.Player2, this.Player1).start();
   }
 
   private void SendBoardStatus(Socket DestClient) {
@@ -36,11 +35,11 @@ public class GameThread {
     }
   }
 
-  private class ReceiveMessages extends Thread {
+  private class ReceiveMessagesThread extends Thread {
 
     private Socket SourceClient, DestinationClient;
 
-    ReceiveMessages(Socket SourceClient, Socket DestinationClient) {
+    ReceiveMessagesThread(Socket SourceClient, Socket DestinationClient) {
       this.SourceClient = SourceClient;
       this.DestinationClient = DestinationClient;
     }
@@ -57,6 +56,10 @@ public class GameThread {
               SendBoardStatus(this.DestinationClient);
               break;
           }
+        }
+        catch (java.io.StreamCorruptedException ex) {
+          ex.printStackTrace();
+          break;
         }
         catch (IOException | ClassNotFoundException ex) {
           Logger.getLogger(GameThread.class.getName()).log(Level.SEVERE, null, ex);
