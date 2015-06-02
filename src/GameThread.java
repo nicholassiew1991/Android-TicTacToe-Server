@@ -16,6 +16,10 @@ public class GameThread {
     this.Player1 = Player1;
     this.Player2 = Player2;
     System.out.println("GameThread Started!");
+    StartReceiveMessagesThread();
+  }
+  
+  private void StartReceiveMessagesThread() {
     new ReceiveMessagesThread(this.Player1, this.Player2).start();
     new ReceiveMessagesThread(this.Player2, this.Player1).start();
   }
