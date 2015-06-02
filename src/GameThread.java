@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -35,7 +36,7 @@ public class GameThread {
       e.printStackTrace();
     }
     catch (ClassCastException e) {
-      System.out.println("Cast problem");
+      e.printStackTrace();
     }
   }
 

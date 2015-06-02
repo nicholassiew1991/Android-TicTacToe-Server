@@ -89,7 +89,7 @@ public class TicTacToeServer {
           Thread.sleep(1000);
         } 
         catch (InterruptedException ex) {
-          Logger.getLogger(TicTacToeServer.class.getName()).log(Level.SEVERE, null, ex);
+          ex.printStackTrace();
         }
         
         if (WiatForPairingList.size() >= 2) {
@@ -99,12 +99,10 @@ public class TicTacToeServer {
           SendPlayerSymbol(Player1, 'O');
           SendPlayerSymbol(Player2, 'X');
           
-          WiatForPairingList.remove(1);
-          WiatForPairingList.remove(0);
-          
           new GameThread(Player1, Player2);
           
-          // Make sure their receive, then open gamethread
+          WiatForPairingList.remove(1);
+          WiatForPairingList.remove(0);
         }
       }
     }
