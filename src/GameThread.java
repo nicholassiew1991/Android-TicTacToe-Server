@@ -1,7 +1,6 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -81,47 +80,4 @@ public class GameThread {
       }
     }
   }
-  
-  //<editor-fold defaultstate="collapsed" desc="Not use temporary">
-  private void SendBoardStatus(Socket DestClient) {
-    try {
-      OutputStream outToClient = DestClient.getOutputStream();
-      ObjectOutputStream out = new ObjectOutputStream(outToClient);
-      out.writeByte(ServerGlobal.BOARD_STATUS);
-      out.writeObject(GameBoard);
-    }
-    catch (IOException e) {
-      e.printStackTrace();
-    }
-    catch (ClassCastException e) {
-      e.printStackTrace();
-    }
-  }
-
-  private class ReceiveMessagesThread extends Thread {
-
-    private Socket SourceClient, DestinationClient;
-
-    ReceiveMessagesThread(Socket SourceClient, Socket DestinationClient) {
-      this.SourceClient = SourceClient;
-      this.DestinationClient = DestinationClient;
-    }
-
-    @Override
-    public void run() {
-      while (true) {
-        try {
-          ObjectInputStream in = new ObjectInputStream(this.SourceClient.getInputStream());
-        }
-        catch (java.io.StreamCorruptedException ex) {
-          ex.printStackTrace();
-          break;
-        }
-        catch (IOException ex) {
-         ex.printStackTrace();
-        }
-      }
-    }
-  }
-  //</editor-fold>
 }

@@ -20,8 +20,6 @@ public class TicTacToeServer {
   
   public TicTacToeServer() {
     new ListeningPort().start();
-    //new PrintClientList().start();
-    //new PairingPlayer().start();
     new NewPairingPlayer().start();
   }
   
@@ -116,48 +114,6 @@ public class TicTacToeServer {
       }
       catch (IOException e) {
         e.printStackTrace();
-      }
-    }
-  }  
-  
-  private class PairingPlayer extends Thread {
-    
-    public void run() {
-      while (true) {
-        
-        try {
-          Thread.sleep(1000);
-        } 
-        catch (InterruptedException ex) {
-          Logger.getLogger(TicTacToeServer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        if (ClientList.size() >= 2) {
-          Socket Player1 = ((Socket)ClientList.get(0));
-          Socket Player2 = ((Socket)ClientList.get(1));
-          
-          if (isClientConnecting(Player1) == false) {
-            ClientList.remove(0);
-          }
-          else if (isClientConnecting(Player2) == false) {
-            ClientList.remove(1);
-          }
-          else {
-            new GameThread(Player1, Player2);
-            ClientList.remove(1);
-            ClientList.remove(0);
-          }
-        }
-      }
-    }
-    
-    private boolean isClientConnecting(Socket Client) {
-      try {
-        Client.sendUrgentData(0xFF);
-        return true;
-      } 
-      catch (IOException ex) {
-        return false;
       }
     }
   }
