@@ -4,5 +4,5 @@ public class ServerGlobal {
   static final byte CLIENT_WAIT_PAIRING = 1;
   static final byte SET_PLAYER_SYMBOL = 2;
   static final byte BOARD_STATUS = 3;
-  static final byte GET_PLAYER_SYMBOL = 4;
+  static final byte CLIENT_DISCONNECT_WHILE_PLAYING = 4;
 }

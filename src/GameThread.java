@@ -29,6 +29,7 @@ public class GameThread {
   private class NewReceiveMessageThread extends Thread {
     
     private Socket SourceClient, DestinationClient;
+    private boolean isGameOver = false;
 
     NewReceiveMessageThread(Socket SourceClient, Socket DestinationClient) {
       this.SourceClient = SourceClient;
@@ -37,7 +38,7 @@ public class GameThread {
     
     @Override
     public void run() {
-      while (true) {
+      while (isGameOver == false) {
         try {
           DataInputStream dIn = new DataInputStream(SourceClient.getInputStream());
           byte MessagesType = dIn.readByte();
@@ -56,6 +57,11 @@ public class GameThread {
             
             NewSendBoardStatus(this.DestinationClient);
           }
+        }
+        catch (java.io.EOFException ex) {
+          System.out.println("Client disconnected.");
+          SendPlayerDisconnectMessages();
+          GameOver();
         }
         catch (IOException ex) {
           Logger.getLogger(GameThread.class.getName()).log(Level.SEVERE, null, ex);
@@ -78,6 +84,22 @@ public class GameThread {
       catch (IOException e) {
         e.printStackTrace();
       }
+    }
+    
+    private void SendPlayerDisconnectMessages() {
+      try {
+        DataOutputStream dOut = new DataOutputStream(this.DestinationClient.getOutputStream());
+        dOut.writeByte(ServerGlobal.CLIENT_DISCONNECT_WHILE_PLAYING);
+        dOut.writeUTF("Opponent is disconnected. You win.");
+        dOut.flush(); // Send out
+      }
+      catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    
+    public void GameOver() {
+      this.isGameOver = true;
     }
   }
 }
