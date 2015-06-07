@@ -98,7 +98,7 @@ public class GameThread {
       }
     }
     
-    public void GameOver() {
+    private void GameOver() {
       this.isGameOver = true;
     }
   }
