@@ -29,6 +29,8 @@ public class GameThread {
   private class NewReceiveMessageThread extends Thread {
     
     private Socket SourceClient, DestinationClient;
+    private DataInputStream dIn;
+    
     private boolean isGameOver = false;
 
     NewReceiveMessageThread(Socket SourceClient, Socket DestinationClient) {
@@ -40,26 +42,15 @@ public class GameThread {
     public void run() {
       while (isGameOver == false) {
         try {
-          DataInputStream dIn = new DataInputStream(SourceClient.getInputStream());
+          dIn = new DataInputStream(SourceClient.getInputStream());
           byte MessagesType = dIn.readByte();
           
           if (MessagesType == ServerGlobal.BOARD_STATUS) {
-            
-            System.out.println("Receive BoardStatus from: " + this.SourceClient);
-            
-            for (int a = 0; a < 3; a++) {
-              for (int b = 0; b < 3; b++) {
-                GameBoard[a][b] = dIn.readChar();
-                System.out.print(GameBoard[a][b] + " ");
-              }
-              System.out.println("");
-            }
-            
-            NewSendBoardStatus(this.DestinationClient);
+            SendBoardStatus();
           }
         }
-        catch (java.io.EOFException ex) {
-          System.out.println("Client disconnected.");
+        catch (java.io.EOFException | java.net.SocketException ex) {
+          System.out.println(this.SourceClient + " disconnected.");
           SendPlayerDisconnectMessages();
           GameOver();
         }
@@ -69,20 +60,32 @@ public class GameThread {
       }
     }
     
-    private void NewSendBoardStatus(Socket DestClient) {
+    private void SendBoardStatus() {
+      
       try {
-        char[][] BoardStatus = GameBoard;
-        DataOutputStream dOut = new DataOutputStream(DestClient.getOutputStream());
+      
+        System.out.println("Receive BoardStatus from: " + this.SourceClient);
+
+        for (int a = 0; a < 3; a++) {
+          for (int b = 0; b < 3; b++) {
+            GameBoard[a][b] = dIn.readChar();
+            System.out.print(GameBoard[a][b] + " ");
+          }
+          System.out.println("");
+        }
+        
+        DataOutputStream dOut = new DataOutputStream(this.DestinationClient.getOutputStream());
         dOut.writeByte(ServerGlobal.BOARD_STATUS);
         for (int a = 0; a < 3; a++) {
           for (int b = 0; b < 3; b++) {
-            dOut.writeChar(BoardStatus[a][b]);
+            dOut.writeChar(GameBoard[a][b]);
           }
         }
+        
         dOut.flush(); // Send out
       }
-      catch (IOException e) {
-        e.printStackTrace();
+      catch (IOException ex) {
+        ex.printStackTrace();
       }
     }
     
@@ -90,8 +93,9 @@ public class GameThread {
       try {
         DataOutputStream dOut = new DataOutputStream(this.DestinationClient.getOutputStream());
         dOut.writeByte(ServerGlobal.CLIENT_DISCONNECT_WHILE_PLAYING);
-        dOut.writeUTF("Opponent is disconnected. You win.");
+        dOut.writeUTF("Opponent is disconnected from the game. You win.");
         dOut.flush(); // Send out
+        this.DestinationClient.close();
       }
       catch (IOException e) {
         e.printStackTrace();
