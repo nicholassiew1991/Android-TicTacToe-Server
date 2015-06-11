@@ -69,9 +69,7 @@ public class GameThread {
         for (int a = 0; a < 3; a++) {
           for (int b = 0; b < 3; b++) {
             GameBoard[a][b] = dIn.readChar();
-            System.out.print(GameBoard[a][b] + " ");
           }
-          System.out.println("");
         }
         
         DataOutputStream dOut = new DataOutputStream(this.DestinationClient.getOutputStream());
