@@ -22,18 +22,18 @@ public class GameThread {
   }
   
   private void StartReceiveMessagesThread() {
-    new NewReceiveMessageThread(this.Player1, this.Player2).start();
-    new NewReceiveMessageThread(this.Player2, this.Player1).start();
+    new ReceiveMessageThread(this.Player1, this.Player2).start();
+    new ReceiveMessageThread(this.Player2, this.Player1).start();
   }
   
-  private class NewReceiveMessageThread extends Thread {
+  private class ReceiveMessageThread extends Thread {
     
     private Socket SourceClient, DestinationClient;
     private DataInputStream dIn;
     
     private boolean isGameOver = false;
 
-    NewReceiveMessageThread(Socket SourceClient, Socket DestinationClient) {
+    ReceiveMessageThread(Socket SourceClient, Socket DestinationClient) {
       this.SourceClient = SourceClient;
       this.DestinationClient = DestinationClient;
     }
@@ -47,6 +47,9 @@ public class GameThread {
           
           if (MessagesType == ServerGlobal.BOARD_STATUS) {
             SendBoardStatus();
+          }
+          if (MessagesType == ServerGlobal.CHAT_MESSAGE) {
+            ForwardChatMessage();
           }
         }
         catch (java.io.EOFException | java.net.SocketException ex) {
@@ -85,6 +88,10 @@ public class GameThread {
       catch (IOException ex) {
         ex.printStackTrace();
       }
+    }
+    
+    private void ForwardChatMessage() {
+      
     }
     
     private void SendPlayerDisconnectMessages() {

@@ -20,7 +20,7 @@ public class TicTacToeServer {
   
   public TicTacToeServer() {
     new ListeningPort().start();
-    new NewPairingPlayer().start();
+    new PairingPlayer().start();
   }
   
   private class ListeningPort extends Thread {
@@ -78,7 +78,7 @@ public class TicTacToeServer {
     } 
   }
   
-  private class NewPairingPlayer extends Thread {
+  private class PairingPlayer extends Thread {
     
     public void run() {
       
