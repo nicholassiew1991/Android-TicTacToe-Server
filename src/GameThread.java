@@ -101,7 +101,7 @@ public class GameThread {
         dOut.writeUTF(ReceivedMessage);
         dOut.flush();
         
-        System.out.println(ReceivedMessage + " has sent to: " + this.DestinationClient);
+        System.out.println("\"" + ReceivedMessage + "\" has sent to: " + this.DestinationClient);
       }
       catch (IOException e) {
         e.printStackTrace();
