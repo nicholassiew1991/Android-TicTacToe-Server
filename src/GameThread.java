@@ -91,7 +91,21 @@ public class GameThread {
     }
     
     private void ForwardChatMessage() {
-      
+      try {
+        DataOutputStream dOut = new DataOutputStream(this.DestinationClient.getOutputStream());
+        String ReceivedMessage = dIn.readUTF();
+        
+        System.out.println("Receive chat message from: " + this.SourceClient + " with: " + ReceivedMessage);
+        
+        dOut.writeByte(ServerGlobal.CHAT_MESSAGE);
+        dOut.writeUTF(ReceivedMessage);
+        dOut.flush();
+        
+        System.out.println(ReceivedMessage + " has sent to: " + this.DestinationClient);
+      }
+      catch (IOException e) {
+        e.printStackTrace();
+      }
     }
     
     private void SendPlayerDisconnectMessages() {
