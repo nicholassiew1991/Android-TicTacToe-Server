@@ -22,6 +22,8 @@ public class GameThread {
   }
   
   private void StartReceiveMessagesThread() {
+    // Have no idea why header corrupted when using ObjectInputStream
+    // I will be back.
     new ReceiveMessageThread(this.Player1, this.Player2).start();
     new ReceiveMessageThread(this.Player2, this.Player1).start();
   }
